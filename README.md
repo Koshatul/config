@@ -1,0 +1,2 @@
+# config
+PHP Configuration Class
