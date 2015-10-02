@@ -3,6 +3,10 @@ Configuration Class for PHP
 
 A Configuration class for PHP for keeping configuration items separate from repositories or incorporating config into repositories.
 
+[![Build Status](https://travis-ci.org/Koshatul/config.png?branch=master)](https://travis-ci.org/Koshatul/config)
+[![Latest Stable Version](https://poser.pugx.org/koshatul/config/v/stable.png)](https://packagist.org/packages/koshatul/config)
+[![Total Downloads](https://poser.pugx.org/koshatul/config/downloads.png)](https://packagist.org/packages/koshatul/config)
+
 Installation
 ------------
 
