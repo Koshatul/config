@@ -25,7 +25,7 @@ class Config {
 		}
 	}
 
-	public function getValue($name) {
+	public function getValue($name, $defaultValue = null) {
 		if (!is_null($this->mData)) {
 			$name = explode('/', $name);
 			$section = array_shift($name);
@@ -38,6 +38,30 @@ class Config {
 				}
 			}
 		}
+		return $defaultValue;
+	}
+
+	public function setValue($name, $value = null) {
+		$name = explode('/', $name);
+		$section = array_shift($name);
+		$confitem = array_shift($name);
+
+		if (array_key_exists($section, $this->mData) and is_array($this->mData[$section]) and array_key_exists($confitem, $this->mData[$section])) {
+			// Section and Name exist, change value
+			if (!is_null($value)) {
+				$this->mData[$section][$confitem] = $value;
+			} else {
+				unset($this->mData[$section][$confitem]);
+			}
+		} elseif (array_key_exists($section, $this->mData) and is_array($this->mData[$section])) {
+			if (!is_null($value)) {
+				$this->mData[$section][$confitem] = $value;
+			}
+		} elseif (!array_key_exists($section, $this->mData)) {
+			$this->mData[$section] = [
+				$confitem => $value,
+			];
+		}
 		return null;
 	}
 
@@ -49,8 +73,12 @@ class Config {
 		return self::$sInstance;
 	}
 
-	public static function Get($name) {
-		return self::Instance()->getValue($name);
+	public static function Get($name, $defaultValue = null) {
+		return self::Instance()->getValue($name, $defaultValue);
+	}
+
+	public static function Set($name, $value = null) {
+		return self::Instance()->setValue($name, $value);
 	}
 
 	public static function GetURI($name, $part) {

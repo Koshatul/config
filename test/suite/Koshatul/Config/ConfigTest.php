@@ -18,6 +18,33 @@ class ConfigTest extends PHPUnit_Framework_TestCase
 		Config::Instance(__DIR__);
 	}
 
+	public function testInMemorySetMethods()
+	{
+		$this->assertEquals(null,  Config::Get('foonew'),    'Test non-existant Key');
+		Config::Set('foonew', 'testvalue1');
+		$this->assertEquals(array('' => 'testvalue1'),  Config::Get('foonew'),    'Test get new title Key');
+
+		$this->assertEquals(null,  Config::Get('footoo/item'),    'Test non-existant Key');
+		Config::Set('footoo/item', 'testvalue1');
+		$this->assertEquals('testvalue1',  Config::Get('footoo/item'),    'Test get new title Key');
+
+		Config::Set('footoo/item');
+		$this->assertEquals(null,  Config::Get('footoo/item'),    'Test non-existant Key');
+
+		Config::Set('footoo/item', 'testvalue2');
+		$this->assertEquals('testvalue2',  Config::Get('footoo/item'),    'Test get new title Key');
+
+		Config::Set('footoo/item', 'testvalue3');
+		$this->assertEquals('testvalue3',  Config::Get('footoo/item'),    'Test get new title Key');
+
+	}
+
+	public function testDefaultValues()
+	{
+		$this->assertEquals(null,  Config::Get('doesnotexist'),    'Test Non Existent Key');
+		$this->assertEquals('defaultvalue',  Config::Get('doesnotexist', 'defaultvalue'),    'Test Default Value on non-existant Key');
+	}
+
 	public function testFindConfigFile()
 	{
 		$filename = new ConfigFile(__DIR__);
