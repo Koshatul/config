@@ -58,9 +58,9 @@ class Config {
 				$this->mData[$section][$confitem] = $value;
 			}
 		} elseif (!array_key_exists($section, $this->mData)) {
-			$this->mData[$section] = [
+			$this->mData[$section] = array(
 				$confitem => $value,
-			];
+			);
 		}
 		return null;
 	}
