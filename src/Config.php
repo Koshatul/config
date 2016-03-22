@@ -26,6 +26,10 @@ class Config {
 	}
 
 	public function getValue($name, $defaultValue = null) {
+		$envname = strtoupper(str_replace('/', '_', $name));
+		if (array_key_exists($envname, $_ENV)) {
+			return $_ENV[$envname];
+		}
 		if (!is_null($this->mData)) {
 			$name = explode('/', $name);
 			$section = array_shift($name);
