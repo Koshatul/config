@@ -14,7 +14,7 @@
 		"yosymfony/toml": "~0.3.3"
 	},
 	"require-dev": {
-		"icecave/archer": "dev-master"
+		"internations/http-mock": "0.7.4"
 	},
 	"autoload": {
 		"psr-4": {

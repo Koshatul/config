@@ -10,4 +10,4 @@ install:
   - ./.travis/.travis.install
 
 script:
-  - ./vendor/bin/archer travis:build
+  - phpunit
