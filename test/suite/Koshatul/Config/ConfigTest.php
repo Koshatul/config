@@ -9,6 +9,8 @@
 
 namespace Koshatul\Config;
 
+use Yosymfony\Toml\Toml;
+
 use PHPUnit_Framework_TestCase;
 
 class ConfigTest extends PHPUnit_Framework_TestCase
@@ -98,7 +100,7 @@ test="testvalue"')
 
     public function testDefaultValues()
     {
-        $this->assertEquals(null,  Config::Get('doesnotexist'),    'Test Non Existent Key');
+        $this->assertEquals(null,            Config::Get('doesnotexist'),                    'Test Non Existent Key');
         $this->assertEquals('defaultvalue',  Config::Get('doesnotexist', 'defaultvalue'),    'Test Default Value on non-existant Key');
     }
 
@@ -111,11 +113,26 @@ test="testvalue"')
 
     public function testURLConfigFile()
     {
-        $url = 'http://localhost:8118/.kosh.config.toml';
+        $url = 'http://code.nervhq.com/toml/.kosh.config.toml';
+        // $testToml = '#Toml File'.PHP_EOL.PHP_EOL.'[webonly]'.PHP_EOL.'test="testvalue"'.PHP_EOL;
+
         $configFile = new ConfigFile($url);
         $this->assertEquals($url, $configFile->getFilename(), 'Check URL File Location');
+
+        // echo "Mock Test".PHP_EOL;
+        // $config = $this->getMockBuilder('Koshatul\Config\Config')
+        // 	->disableOriginalConstructor()
+        // 	->getMock();
+
+        // $config->expects($this->once())
+        // 	->method('_getContents')
+        // 	->with($url)
+        // 	->willReturn($testToml);
+        // $config->__construct($url);
+
         $config = new Config($url);
         $this->assertEquals('testvalue', $config->getValue('webonly/test'), 'Check Value in Web Only TOML file');
+
     }
 
     public function testTOMLSpecifics()
