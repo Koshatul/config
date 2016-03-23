@@ -15,54 +15,10 @@ use PHPUnit_Framework_TestCase;
 
 class ConfigTest extends PHPUnit_Framework_TestCase
 {
-    use \InterNations\Component\HttpMock\PHPUnit\HttpMockTrait;
-
-    public static function setUpBeforeClass()
-    {
-        static::setUpHttpMockBeforeClass('8118', 'localhost');
-    }
-
-    public static function tearDownAfterClass()
-    {
-        static::tearDownHttpMockAfterClass();
-    }
 
     public function setUp()
     {
-        $this->setUpHttpMock();
         Config::Instance(__DIR__);
-        $this->http->mock
-            ->when()
-                ->methodIs('GET')
-                ->pathIs('/.kosh.config.toml')
-            ->then()
-                ->body('#Toml File
-
-title="TOML File Title"
-
-[testsection]
-test="testdatavalue"
-
-[anothersection]
-test="differentvalue"
-
-[uritest]
-mysqlurl="mysql://username:password@hostname:1234/schema"
-mysqlurl_socket="mysql://username:password@hostname:1234/schema?socket=/tmp/mysql.sock"
-mysqlurl_badurl="mysql"
-mysqlurl_badport="mysql://username:password@hostname:port/schema"
-mysqlurl_badschema="mysql://username:password@hostname:port/schema/morestuff"
-
-[webonly]
-test="testvalue"')
-            ->end();
-
-        $this->http->setUp();
-    }
-
-    public function tearDown()
-    {
-        $this->tearDownHttpMock();
     }
 
     public function testInMemorySetMethods()
