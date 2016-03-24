@@ -4,6 +4,7 @@ title="TOML File Title"
 
 [testsection]
 test="testdatavalue"
+overridetest="testdatavalue"
 
 [anothersection]
 test="differentvalue"

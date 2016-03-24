@@ -43,15 +43,13 @@ class ConfigTest extends PHPUnit_Framework_TestCase
 
     public function testEnvironmentVariables()
     {
-        $this->assertEquals('testdatavalue',  Config::Get('testsection/test'),         'Return Known Config Value');
-        $_ENV['TESTSECTION_TEST'] = 'override_value';
-        $this->assertEquals('override_value',  Config::Get('testsection/test'),         'Return Environemnt Value (overiding existing value)');
-        unset($_ENV['TESTSECTION_TEST']);
+        $this->assertEquals('testdatavalue',  Config::Get('testsection/overridetest'),         'Return Known Config Value');
+        putenv('TESTSECTION_OVERRIDETEST=override_value');
+        $this->assertEquals('override_value',  Config::Get('testsection/overridetest'),         'Return Environemnt Value (overiding existing value)');
 
         $this->assertEquals(null,        Config::Get('onlyin/env'),         'Return Invalid Environemnt Value');
-        $_ENV['ONLYIN_ENV'] = 'newvalue';
+        putenv('ONLYIN_ENV=newvalue');
         $this->assertEquals('newvalue',  Config::Get('onlyin/env'),         'Return Environemnt Value (new value)');
-        unset($_ENV['ONLYIN_ENV']);
     }
 
     public function testDefaultValues()
