@@ -20,8 +20,9 @@ class Config
 
     public function __construct($override_path = null)
     {
-        if (array_key_exists('KOSH_CONFIG', $_ENV)) {
-            $override_path = $_ENV['KOSH_CONFIG'];
+        $env_path = getenv('KOSH_CONFIG');
+        if ($env_path !== false) {
+            $override_path = $env_path;
         }
         $this->mConfigFile = new ConfigFile($override_path);
         if ($this->mConfigFile->isValid()) {
@@ -37,8 +38,9 @@ class Config
     public function getValue($name, $defaultValue = null)
     {
         $envname = strtoupper(str_replace('/', '_', $name));
-        if (array_key_exists($envname, $_ENV)) {
-            return $_ENV[$envname];
+        $envvalue = getenv($envname);
+        if ($envvalue !== false) {
+            return $envvalue;
         }
         if (!is_null($this->mData)) {
             $name = explode('/', $name);
