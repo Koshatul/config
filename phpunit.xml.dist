@@ -15,6 +15,15 @@
         </testsuite>
     </testsuites>
 
+    <filter>
+        <whitelist>
+            <directory suffix=".php">./src</directory>
+        </whitelist>
+      <blacklist>
+          <directory suffix=".php">./vendor</directory>
+      </blacklist>
+    </filter>
+    
     <logging>
         <log type="coverage-html" target="artifacts/coverage" title="koshatul/config code coverage"
              charset="UTF-8" yui="true" highlight="true"
