@@ -40,6 +40,21 @@ Usage
 -----
 You can use this package to get configuration from a global or specific configuration store.
 
+It will pull values from the specified file first, and fallback to environment variables.
+
+```php
+Config::Get('project/apikey')
+```
+would look in the file first for 
+```TOML
+[project]
+apikey="value"
+```
+and fallback to the environment variable
+```bash
+PROJECT_APIKEY="value"
+```
+
 ```php
 use Koshatul\Config\Config;
 
