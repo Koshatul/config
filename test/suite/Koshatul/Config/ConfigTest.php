@@ -41,6 +41,15 @@ class ConfigTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('testvalue3',  Config::Get('footoo/item'),    'Test get new title Key');
     }
 
+    public function testEnvOverrideFile()
+    {
+        $url = 'http://code.nervhq.com/toml/.empty.config.toml';
+        putenv("KOSH_CONFIG=$url");
+        $configObject = new Config(__DIR__);
+        $this->assertEquals($url,  $configObject->getConfigFile()->getFilename(),    'Test Environment Override Config Location');
+        putenv('KOSH_CONFIG');
+    }
+
     public function testEnvironmentVariables()
     {
         $this->assertEquals('testdatavalue',  Config::Get('testsection/overridetest'),         'Return Known Config Value');
@@ -101,7 +110,17 @@ class ConfigTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('differentvalue', Config::Get('anothersection/test'),      'Return Known Config Value');
     }
 
-    public function testURIParts_pass()
+    public function testURIParts()
+    {
+        $this->assertEquals('mysql',     Config::GetURI('uritest/mysqlurl', PHP_URL_SCHEME), 'URI Test [VALID]: Scheme');
+        $this->assertEquals('username',  Config::GetURI('uritest/mysqlurl', PHP_URL_USER),   'URI Test [VALID]: Username');
+        $this->assertEquals('password',  Config::GetURI('uritest/mysqlurl', PHP_URL_PASS),   'URI Test [VALID]: Password');
+        $this->assertEquals('hostname',  Config::GetURI('uritest/mysqlurl', PHP_URL_HOST),   'URI Test [VALID]: Hostname');
+        $this->assertEquals('1234',      Config::GetURI('uritest/mysqlurl', PHP_URL_PORT),   'URI Test [VALID]: Port');
+        $this->assertEquals('/schema',   Config::GetURI('uritest/mysqlurl', PHP_URL_PATH),   'URI Test [VALID]: Path');
+    }
+
+    public function testMySQLURIParts()
     {
         $this->assertEquals('mysql',     Config::GetMySQLURI('uritest/mysqlurl', PHP_URL_SCHEME), 'MySQL URI Test [VALID]: Scheme');
         $this->assertEquals('username',  Config::GetMySQLURI('uritest/mysqlurl', PHP_URL_USER),   'MySQL URI Test [VALID]: Username');
@@ -109,7 +128,10 @@ class ConfigTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('hostname',  Config::GetMySQLURI('uritest/mysqlurl', PHP_URL_HOST),   'MySQL URI Test [VALID]: Hostname');
         $this->assertEquals('1234',      Config::GetMySQLURI('uritest/mysqlurl', PHP_URL_PORT),   'MySQL URI Test [VALID]: Port');
         $this->assertEquals('schema',    Config::GetMySQLURI('uritest/mysqlurl', PHP_URL_PATH),   'MySQL URI Test [VALID]: Database');
+    }
 
+    public function testMySQLURIParts_array()
+    {
         $query = array(
             'scheme' => 'mysql',
             'host' => 'hostname',
@@ -119,7 +141,10 @@ class ConfigTest extends PHPUnit_Framework_TestCase
             'path' => '/schema',
         );
         $this->assertEquals($query,      Config::GetMySQLURI('uritest/mysqlurl', null), 'MySQL URI Test [VALID]: Array');
+    }
 
+    public function testMySQLURIParts_socket()
+    {
         $this->assertEquals('mysql',     Config::GetMySQLURI('uritest/mysqlurl_socket', PHP_URL_SCHEME), 'MySQL URI Test [VALID_WITHSOCKET]: Scheme');
         $this->assertEquals('username',  Config::GetMySQLURI('uritest/mysqlurl_socket', PHP_URL_USER),   'MySQL URI Test [VALID_WITHSOCKET]: Username');
         $this->assertEquals('password',  Config::GetMySQLURI('uritest/mysqlurl_socket', PHP_URL_PASS),   'MySQL URI Test [VALID_WITHSOCKET]: Password');
@@ -132,7 +157,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('/tmp/mysql.sock', $query['socket'], 'MySQL URI Test [VALID_WITHSOCKET]: Socket Value Correct');
     }
 
-    public function testURIParts_baduri()
+    public function testMySQLURIParts_baduri()
     {
         $this->assertEquals(null,  Config::GetMySQLURI('uritest/mysqlurl_badurl', PHP_URL_SCHEME), 'MySQL URI Test [BADURI]: Scheme');
         $this->assertEquals(null,  Config::GetMySQLURI('uritest/mysqlurl_badurl', PHP_URL_USER),   'MySQL URI Test [BADURI]: Username');

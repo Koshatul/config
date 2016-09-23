@@ -23,6 +23,8 @@ class ConfigFileTest extends PHPUnit_Framework_TestCase
         $filename = new ConfigFile(__DIR__);
         $expectedLocation = str_replace('suite/Koshatul/Config', '', __DIR__);
         $this->assertEquals($expectedLocation . '.kosh.config.toml', $filename->getFilename(), 'Check Test File Location');
+        $configSpecifyFile = new ConfigFile($expectedLocation . '.kosh.config.toml');
+        $this->assertEquals($expectedLocation . '.kosh.config.toml', $configSpecifyFile->getFilename(), 'Check Test File Location');
     }
 
     public function testFindGlobalFile()

@@ -35,6 +35,11 @@ class Config
         }
     }
 
+    public function getConfigFile()
+    {
+        return $this->mConfigFile;
+    }
+
     public function getValue($name, $defaultValue = null)
     {
         $envname = strtoupper(str_replace('/', '_', $name));
@@ -84,6 +89,51 @@ class Config
         return null;
     }
 
+    public function getURIValue($name, $part)
+    {
+        switch ($part) {
+            case PHP_URL_SCHEME:
+            case PHP_URL_HOST:
+            case PHP_URL_PORT:
+            case PHP_URL_USER:
+            case PHP_URL_PASS:
+            case PHP_URL_PATH:
+            case PHP_URL_QUERY:
+            case PHP_URL_FRAGMENT:
+                return parse_url($this->getValue($name), $part);
+        }
+
+        return parse_url($this->getValue($name));
+    }
+
+    public function getMySQLURIValue($name, $part)
+    {
+        if (is_null($part)) {
+            $part = -1;
+        }
+        $output = $this->getURIValue($name, $part);
+        if ($output == $this->getValue($name)) {
+            return null;
+        }
+        switch ($part) {
+            case PHP_URL_SCHEME:
+            case PHP_URL_HOST:
+            case PHP_URL_PORT:
+            case PHP_URL_USER:
+            case PHP_URL_PASS:
+            case PHP_URL_FRAGMENT:
+                break;
+            case PHP_URL_QUERY:
+                parse_str($output, $output);
+                break;
+            case PHP_URL_PATH:
+                $output = substr($output, 1);
+                break;
+        }
+
+        return $output;
+    }
+
     public static function Instance($override_path = null)
     {
         if (is_null(self::$sInstance)) {
@@ -105,46 +155,11 @@ class Config
 
     public static function GetURI($name, $part)
     {
-        switch ($part) {
-            case PHP_URL_SCHEME:
-            case PHP_URL_HOST:
-            case PHP_URL_PORT:
-            case PHP_URL_USER:
-            case PHP_URL_PASS:
-            case PHP_URL_PATH:
-            case PHP_URL_QUERY:
-            case PHP_URL_FRAGMENT:
-                return parse_url(self::Get($name), $part);
-        }
-
-        return parse_url(self::Get($name));
+        return self::Instance()->getURIValue($name, $part);
     }
 
     public static function GetMySQLURI($name, $part)
     {
-        if (is_null($part)) {
-            $part = -1;
-        }
-        $output = self::GetURI($name, $part);
-        if ($output == self::Get($name)) {
-            return null;
-        }
-        switch ($part) {
-            case PHP_URL_SCHEME:
-            case PHP_URL_HOST:
-            case PHP_URL_PORT:
-            case PHP_URL_USER:
-            case PHP_URL_PASS:
-            case PHP_URL_FRAGMENT:
-                break;
-            case PHP_URL_QUERY:
-                parse_str($output, $output);
-                break;
-            case PHP_URL_PATH:
-                $output = substr($output, 1);
-                break;
-        }
-
-        return $output;
+        return self::Instance()->getMySQLURIValue($name, $part);
     }
 }
