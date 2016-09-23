@@ -9,7 +9,7 @@
     </target>
 
     <target name="prepare">
-        <get src="http://getcomposer.org/composer.phar" dest="artifacts/composer.phar" usetimestamp="true"/>
+        <get src="https://getcomposer.org/composer.phar" dest="artifacts/composer.phar" usetimestamp="true"/>
         <exec executable="php" failonerror="true">
             <arg value="artifacts/composer.phar"/>
             <arg value="install"/>
