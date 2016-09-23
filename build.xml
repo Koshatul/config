@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <project name="config" default="build">
     <target name="build" description="Run CI jobs" depends="prepare,phpunit"/>
+    <target name="travis" description="Run CI jobs" depends="clean,composer-local,phpunit"/>
 
     <target name="clean">
         <delete dir="${basedir}/artifacts/" includes="**/*" excludes="**/.gitkeep"/>
@@ -8,10 +9,19 @@
         <mkdir dir="${basedir}/artifacts/coverage/"/>
     </target>
 
-    <target name="prepare">
+    <target name="prepare" depends="composer-download" />
+
+    <target name="composer-download">
         <get src="https://getcomposer.org/composer.phar" dest="artifacts/composer.phar" usetimestamp="true"/>
         <exec executable="php" failonerror="true">
             <arg value="artifacts/composer.phar"/>
+            <arg value="install"/>
+            <arg value="--dev"/>
+        </exec>
+    </target>
+
+    <target name="composer-local">
+        <exec executable="composer" failonerror="true">
             <arg value="install"/>
             <arg value="--dev"/>
         </exec>
